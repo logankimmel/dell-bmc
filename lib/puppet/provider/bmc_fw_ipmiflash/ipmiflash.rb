@@ -105,15 +105,13 @@ Puppet::Type.type(:bmc_fw_ipmiflash).provide(
   end
 
   def ipmi_flash(firmware)
-    cmd = "#{IPMI_FLASH} -p -H#{transport[:host]} -U#{transport[:user]} -P#{transport[:password]} #{firmware['component_name']} #{firmware['location']}"
-    Puppet.debug("#{cmd}")
+    cmd = "#{IPMI_FLASH} -p -H #{transport[:host]} -U #{transport[:user]} -P #{transport[:password]} #{firmware['component_name']} #{firmware['location']}"
     resp = run_cmd(cmd)
-    Puppet.debug("======================================")
     Puppet.debug("#{resp}")
     if resp.include? 'Error condition during update process'
       raise Puppet::Error, "Error condition during update process"
     else
-      sleep 180
+      sleep 240
       check_for_ready
     end
   end
